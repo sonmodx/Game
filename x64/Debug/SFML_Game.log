@@ -1,0 +1,17 @@
+﻿  Game.cpp
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Game.cpp(148,81): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Game.cpp(148,54): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Game.cpp(165,61): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+  SFML_Game.vcxproj -> C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\x64\Debug\SFML_Game.exe
