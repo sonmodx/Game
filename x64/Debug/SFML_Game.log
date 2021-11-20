@@ -1,17 +1,291 @@
-﻿  Game.cpp
-C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Game.cpp(148,81): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Game.cpp(148,54): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Game.cpp(165,61): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+﻿  Bullet.cpp
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(29,79): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(29,56): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(30,85): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(30,65): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(40,82): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(40,56): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(41,85): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(41,65): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(51,82): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(51,56): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(52,85): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(52,65): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(96,13): warning C4244: 'initializing': conversion from 'sf::Int32' to 'float', possible loss of data
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(106,158): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(106,138): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(106,102): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(106,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(120,158): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(120,138): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(120,102): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(120,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(136,158): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(136,138): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(136,102): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(136,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(155,160): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(155,140): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(155,104): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(155,65): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(157,160): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(157,140): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(157,104): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\SFML_Game\Bullet.cpp(157,65): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
           ]
   SFML_Game.vcxproj -> C:\Users\lenovo\Desktop\SFML_Game\Game_Dev\x64\Debug\SFML_Game.exe

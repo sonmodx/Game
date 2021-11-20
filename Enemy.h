@@ -32,10 +32,14 @@ public:
 	const int& getType() const;
 	const int& getPoints() const;
 	const int& getDamage() const;
+	const int& getHp() const;
+	const int& getHpMax() const;
+
+	//Modifier
+	void loseHp(const int value);
 
 	//Function
 	void Move();
 	void update(int type);
 	void render(sf:: RenderTarget *target);
 };
-

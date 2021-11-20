@@ -7,6 +7,13 @@ void Player::initVariables()
 	this->hp = this->hpMax;
 	this->attackTimeMax = 20.f;
 	this->attackTime = this->attackTimeMax;
+	this->skillTimeMax = 100.f;
+	this->skillTime = this->skillTimeMax;
+	this->skillTornadoTimeMax = 100.f;
+	this->skillTornadoTime = this->skillTornadoTimeMax;
+	this->skillSuperMax = 100.f;
+	this->skillSuper = this->skillSuperMax;
+	this->directionTor = -1;
 	this->animationFrame = 0;
 }
 
@@ -48,6 +55,36 @@ const int& Player::getHpMax() const
 	return this->hpMax;
 }
 
+const int& Player::getSkill() const
+{
+	return this->skillTime;
+}
+
+const int& Player::getSkillMax() const
+{
+	return this->skillTimeMax;
+}
+
+const int& Player::getSkillTornado() const
+{
+	return this->skillTornadoTime;
+}
+
+const int& Player::getSkillTornadoMax() const
+{
+	return this->skillTornadoTimeMax;
+}
+
+const int& Player::getSkillSuper() const
+{
+	return this->skillSuper;
+}
+
+const int& Player::getSkillSuperMax() const
+{
+	return this->skillSuperMax;
+}
+
 const sf::Vector2f& Player::getPosition() const
 {
 	return this->sprite.getPosition();
@@ -65,6 +102,43 @@ const bool Player::canAttack()
 	
 }
 
+const bool Player::canSkill()
+{
+	if (this->skillTime >= this->skillTimeMax)
+	{
+		this->skillTime = 0.f;
+		return true;
+	}
+	return false;
+}
+
+const bool Player::canSkillTornado()
+{
+	if (this->skillTornadoTime >= this->skillTornadoTimeMax)
+	{
+		this->skillTornadoTime = 0.f;
+		return true;
+	}
+	return false;
+}
+
+const bool Player::canSkillSuper()
+{
+	if (this->skillSuper >= this->skillSuperMax)
+	{
+		this->skillSuper = 0.f;
+		return true;
+	}
+	return false;
+}
+
+const int Player::getDirTor()
+{
+	return this->directionTor;
+}
+
+
+
 const sf::FloatRect Player::getBounds() const
 {
 	return this->sprite.getGlobalBounds();
@@ -80,6 +154,11 @@ void Player::loseHp(const int value)
 	this->hp -= value;
 	if (this->hp < 0.f)
 		this->hp = 0;
+}
+
+void Player::setPosition(const sf::Vector2f position)
+{
+	this->sprite.setPosition(position);
 }
 
 //Functions
@@ -101,6 +180,18 @@ void Player::gainHealth(const int health)
 		this->hp = this->hpMax;
 }
 
+void Player::updateSkill()
+{
+	if (this->skillTime < this->skillTimeMax)
+		this->skillTime += 0.2f;
+
+	if (this->skillTornadoTime < this->skillTornadoTimeMax)
+		this->skillTornadoTime += 0.5f;
+
+	if (this->skillSuper < this->skillSuperMax)
+		this->skillSuper += 0.1f;
+}
+
 void Player::updateAttack()
 {
 	if (this->attackTime < this->attackTimeMax)
@@ -110,7 +201,6 @@ void Player::updateAttack()
 void Player::updateInput()
 {
 	//Keyboard input
-	//Left
 	float time = cl.getElapsedTime().asMilliseconds();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && time > 70)
 	{
@@ -126,19 +216,26 @@ void Player::updateInput()
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && time > 70)
 	{
+		this->directionTor = -1;
 		this->sprite.move(0.f, -this->movementSpeed);
 		this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * this->animationFrame, this->sizeSprite.y * 2, this->sizeSprite.x, this->sizeSprite.y));
-		//this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * this->animationFrame, this->sizeSprite.y * 3, this->sizeSprite.x, this->sizeSprite.y));
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * this->animationFrame, this->sizeSprite.y * 1, this->sizeSprite.x, this->sizeSprite.y));
+		}
 		cl.restart();
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && time > 70)
 	{
+		this->directionTor = 1;
 		this->sprite.move(0.f, this->movementSpeed);
 		this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * this->animationFrame, this->sizeSprite.y * 2, this->sizeSprite.x, this->sizeSprite.y));
-		//this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * this->animationFrame, this->sizeSprite.y * 0, this->sizeSprite.x, this->sizeSprite.y));
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * this->animationFrame, this->sizeSprite.y * 1, this->sizeSprite.x, this->sizeSprite.y));
+		}
 		cl.restart();
 	}
-	
 	this->animationFrame++;
 	if (this->animationFrame > 2)
 	{
@@ -165,6 +262,7 @@ void Player::updateWindowBoundsCollision(const sf::RenderTarget* target)
 void Player::update(const sf::RenderTarget* target)
 {
 	this->updateAttack();
+	this->updateSkill();
 	this->updateInput();
 	
 	//Window bounds collision

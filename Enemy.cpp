@@ -2,16 +2,35 @@
 
 void Enemy::initVaraible()
 {
-	this->hp		=  0;
-	this->hpMax		=  10;
-	this->pointCount = rand() % 20+ 3;
-	this->damage	=  this->pointCount;
-	this->point		=  this->pointCount;
-	this->speed		=  10.f;
-	this->animationFrame = 0;
-	this->animationFrameHARD = 9;
+	switch (this->type)
+	{
+	case DEFAULT:
+		this->hp = 10;
+		this->hpMax = 10;
+		this->damage = 10;
+		this->point = 10;
+		this->speed = 15.f;
+		this->animationFrame = 0;
+		break;
+	case MEDIUM:
+		this->hp = 20;
+		this->hpMax = 20;
+		this->damage = 20;
+		this->point = 20;
+		this->speed = 30.f;
+		this->animationFrame = 0;
+		break;
+	case HARD:
+		this->hp = 50;
+		this->hpMax = 50;
+		this->damage = 50;
+		this->point = 100;
+		this->speed = 7.f;
+		this->animationFrameHARD = 9;
+		break;
+	}
 }
-
+	
 void Enemy::initShape()
 {
 	switch (this->type)
@@ -84,6 +103,23 @@ const int& Enemy::getDamage() const
 	return this->damage;
 }
 
+const int& Enemy::getHp() const
+{
+	return this->hp;
+}
+
+const int& Enemy::getHpMax() const
+{
+	return this->hpMax;
+}
+
+void Enemy::loseHp(const int value)
+{
+	this->hp -= value;
+	if (this->hp <= 0.f)
+		this->hp = 0;
+}
+
 //Function
 void Enemy::Move()
 {
@@ -129,11 +165,7 @@ void Enemy::Move()
 			cl.restart();
 		}
 		break;
-	}
-	
-
-	
-		
+	}	
 }
 
 void Enemy::update(int type)

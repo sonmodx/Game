@@ -1,22 +1,22 @@
 #include "Game.h"
 
-//using namespace sf;
-
 int main()
 {
-	//Initialize random seed
-	srand(static_cast<unsigned>(time(0)));
-
-	//Initialize game object
+	//Soundtrack
+	sf::Music music;
+	//music.openFromFile("sound/soundTrack.ogg");
+	//music.play();
+	//music.setVolume(30);
+	//music.setLoop(true);
 	Game game;
+	game.run();
+	
+	
 
-	//Game loop
-	while (game.running())
-	{
-		game.update();
-		game.render();
-	}
-
-	//End of application
+		
+	
+	
+	
+	
 	return 0;
 }
