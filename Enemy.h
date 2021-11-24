@@ -1,7 +1,7 @@
 #pragma once
 #include "Bullet.h"
 
-enum EnemyTypes {DEFAULT = 0, MEDIUM, HARD};
+enum EnemyTypes {DEFAULT = 0, MEDIUM, HARD, BOSS};
 
 class Enemy
 {

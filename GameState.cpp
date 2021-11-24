@@ -15,6 +15,7 @@ void GameState::initVariables()
 	this->currentLevel = 1;
 	this->incrementTime = 1.f;
 	this->endGame = false;
+	this->bossIsDead = true;
 	this->spawnTimerMax = 10.f;
 	this->spawnTimer = this->spawnTimerMax;
 	this->points = 0;
@@ -27,14 +28,32 @@ void GameState::initWindow()
 
 void GameState::initSound()
 {
+	//Soundtrack
+	this->music.openFromFile("sound/avenger.wav");
+	this->music.play();
+	this->music.setVolume(30);
+	this->music.setLoop(true);
+
+	this->buffers["S_OBS"].loadFromFile("sound/obs_attack.wav");
+	this->buffers["S_HEAL"].loadFromFile("sound/potion.wav");
+	this->buffers["S_BLUEBALL"].loadFromFile("sound/blueBall.wav");
 	this->buffers["GAMEOVER"].loadFromFile("sound/gameOver.wav");
 	this->buffers["FIRE"].loadFromFile("sound/shoot_fire.wav");
 	if (!this->buffers["ENEMYDEAD"].loadFromFile("sound/fire.wav"))
 		std::cout << "FAiled" << std::endl;
+
+	this->s_blueBall.setBuffer(this->buffers["S_BLUEBALL"]);
+	this->s_blueBall.setVolume(20.f);
+	this->s_blueBall.setPitch(0.9);
 	this->endGameSounds.setBuffer(this->buffers["GAMEOVER"]);
 	this->enemyDeadSound.setBuffer(this->buffers["ENEMYDEAD"]);
-
 	this->fireSound.setBuffer(this->buffers["FIRE"]);
+	this->fireSound.setVolume(20.f);
+	this->s_heal.setBuffer(this->buffers["S_HEAL"]);
+	this->s_heal.setVolume(80.f);
+	this->s_obs.setBuffer(this->buffers["S_OBS"]);
+	this->s_obs.setVolume(50.f);
+
 }
 
 void GameState::initGameOverMenu()
@@ -46,15 +65,20 @@ void GameState::initGameOverMenu()
 
 void GameState::initTexture()
 {
+	//Obstacle
+	this->textures["OBSTACLE"] = new sf::Texture();
+	this->textures["OBSTACLE"]->loadFromFile("img/obstacle.png");
+
 	//Bullet
 	this->textures["BULLET"] = new sf::Texture();
 	this->textures["BULLET"]->loadFromFile("img/fire.png");
-	this->textures["GREENBULLET"] = new sf::Texture();
-	if (!this->textures["GREENBULLET"]->loadFromFile("img/blueBall.png"))
+	this->textures["BLUEBALL"] = new sf::Texture();
+	if (!this->textures["BLUEBALL"]->loadFromFile("img/blueBall.png"))
 		std::cout << "can't load this bullet";
 
-	this->textures["GREEN_BULLET_PIC"] = new sf::Texture();
-	this->textures["GREEN_BULLET_PIC"]->loadFromFile("img/greenLaser.png");
+	this->textures["BLUEBALL_PIC"] = new sf::Texture();
+	this->textures["BLUEBALL_PIC"]->loadFromFile("img/blueBall.png");
+	
 	
 	this->textures["TORNADO"] = new sf::Texture();
 	this->textures["TORNADO"]->loadFromFile("img/Tornado.png");
@@ -73,27 +97,68 @@ void GameState::initTexture()
 	this->textures["SHIP"] = new sf::Texture();
 	this->textures["SHIP"]->loadFromFile("img/spaceShip.png");
 
-	//Picture green bullet
-	this->laserPic.setTexture(*this->textures["GREEN_BULLET_PIC"]);
-	this->laserPic.setScale(0.7f, 0.7f);
+	//Picture blue ball
+	this->g_frame[0].setTexture(this->textures["BLUEBALL_PIC"]);
+	this->g_frame[0].setSize(sf::Vector2f(100, 100));
+	this->g_frame[0].setTextureRect(sf::IntRect(
+		0, 0,
+		this->textures["BLUEBALL_PIC"]->getSize().x / 4.f,
+		this->textures["BLUEBALL_PIC"]->getSize().y)
+	);
+	this->g_frame[0].setPosition(this->window->getSize().x / 2.f - 45.f,
+		this->window->getSize().y - this->g_frame[0].getGlobalBounds().height - 45.f);
 
+	this->g_frame[1].setTexture(this->textures["SUPER"]);
+	this->g_frame[1].setSize(sf::Vector2f(200, 200));
+	this->g_frame[1].setTextureRect(sf::IntRect(
+		4 *this->textures["SUPER"]->getSize().x / 6.f, 0,
+		this->textures["SUPER"]->getSize().x / 6.f ,
+		this->textures["SUPER"]->getSize().y / 3.f)
+	);
+	this->g_frame[1].setPosition(300.f,
+		this->window->getSize().y - this->g_frame[1].getGlobalBounds().height);
+
+	this->g_frame[2].setTexture(this->textures["TORNADO"]);
+	this->g_frame[2].setSize(sf::Vector2f(150, 150));
+	this->g_frame[2].setTextureRect(sf::IntRect(
+		0, 2*this->textures["TORNADO"]->getSize().y / 4.f,
+		this->textures["TORNADO"]->getSize().x / 5.f ,
+		this->textures["TORNADO"]->getSize().y / 4.f)
+	);
+	this->g_frame[2].setPosition(this->window->getSize().x - 300.f - this->g_frame[2].getGlobalBounds().width,
+		this->window->getSize().y - this->g_frame[2].getGlobalBounds().height - 15.f);
 	//Item
 	this->textures["HEAL"] = new sf::Texture();
 	this->textures["HEAL"]->loadFromFile("img/potion.png");
+
+	//gui Back
+	this->textures["GUI_BACK"] = new sf::Texture();
+	this->textures["GUI_BACK"]->loadFromFile("img/guiBack.jpg");
 }
 
 void GameState::initSpace()
 {
-	if (!this->spaceBackgroundTexture.loadFromFile("img/spaceBackground.png"))
+	if (!this->spaceBackgroundTexture[0].loadFromFile("img/spaceBackground.png"))
 		std::cout << "This background load failed" << std::endl;
-	this->spaceBackground.setTexture(this->spaceBackgroundTexture);
+	if (!this->spaceBackgroundTexture[1].loadFromFile("img/spaceScore.jpg"))
+		std::cout << "This background load failed" << std::endl;
+	this->spaceBackground.setTexture(this->spaceBackgroundTexture[0]);
 	this->spaceBackground.setScale(1.5f,1.5f);
+}
+
+void GameState::initObstacle()
+{
+	this->speedObs = 10.f;
+	this->obs_up = 1.f;
+	this->spawnObstacleTime = 0.f;
+	this->spawnObstacleTimeMax = 100.f;
+	this->spawnObstacleMaximum = 1;
 }
 
 void GameState::initShip()
 {
 	this->numberShip = 0.f;
-	this->numberShipMax = 5.f;
+	this->numberShipMax = 4.f;
 	this->positionShip_x = 20.f;
 	this->positionShip_y = 100.f;
 }
@@ -141,12 +206,14 @@ void GameState::initText()
 	this->playerHpBarBack.setFillColor(sf::Color(25, 25, 25, 200));
 
 	//Init Enemy GUI
-	this->enemyText.setFont(this->guiFont);
-	this->enemyText.setCharacterSize(18);
-	this->enemyText.setFillColor(sf::Color::Magenta);
+	this->enemyHpBar.setSize({ 50.f,8.f });
+	this->enemyHpBar.setFillColor(sf::Color::White);
+
+	this->enemyHpBarBack = this->enemyHpBar;
+	this->enemyHpBarBack.setFillColor(sf::Color(25, 25, 25, 200));
 
 	//Skill Time 
-	//Laser
+	//Blue ball
 	this->skillTimeText.setFont(this->guiFont);
 	this->skillTimeText.setCharacterSize(40);
 	this->skillTimeText.setFillColor(sf::Color::Yellow);
@@ -154,7 +221,9 @@ void GameState::initText()
 	//Tornado
 	this->playerSkillTornadoBar.setSize(sf::Vector2f(100.f, 10.f));
 	this->playerSkillTornadoBar.setFillColor(sf::Color(0, 255, 255));
-	this->playerSkillTornadoBar.setPosition(sf::Vector2f(10.f, 50.f));
+	this->playerSkillTornadoBar.setPosition(sf::Vector2f(this->g_frame[2].getPosition().x + this->g_frame[2].getGlobalBounds().width,
+		this->g_frame[2].getPosition().y +this->g_frame[2].getGlobalBounds().height / 2.f)
+	);
 
 	this->playerSkillTornadoBarBack = this->playerSkillTornadoBar;
 	this->playerSkillTornadoBarBack.setFillColor(sf::Color(25, 25, 25, 200));
@@ -162,9 +231,13 @@ void GameState::initText()
 	//Super
 	this->playerSkillSuper.setSize(sf::Vector2f(100.f, 10.f));
 	this->playerSkillSuper.setFillColor(sf::Color::Magenta);
+	this->playerSkillSuper.setPosition(sf::Vector2f(this->g_frame[1].getPosition().x + this->g_frame[1].getGlobalBounds().width,
+		this->g_frame[1].getPosition().y + this->g_frame[1].getGlobalBounds().height / 2.f)
+	);
 
 	this->playerSkillSuperBack = this->playerSkillSuper;
 	this->playerSkillSuperBack.setFillColor(sf::Color(25, 25, 25, 200));
+
 
 	//Level
 	this->level.setFont(this->guiFont);
@@ -203,12 +276,13 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	: State(window, supportedKeys, states)
 {
 	this->initKeybinds();
-	this->initVariables();
+	this->initVariables(); 
 	this->initWindow();
 	this->initSpace();
 	this->initSound();
 	this->initTexture();
 	this->initShip();
+	this->initObstacle();
 	this->initPlayer();
 	this->initItem();
 	this->initEnemy();
@@ -216,6 +290,12 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initText();
 	this->initGameOverMenu();
 	this->initPauseMenu();
+
+	//guiBack
+	this->guiBack.setTexture(this->textures["GUI_BACK"]);
+	this->guiBack.setSize(sf::Vector2f(this->window->getSize().x, 200.f));
+	this->guiBack.setFillColor(sf::Color(100, 130, 200, 255));
+	this->guiBack.setPosition(sf::Vector2f(0.f,this->window->getSize().y -200.f));
 
 	//Enter a name
 	textbox1 = new Textbox(50, sf::Color::White, true);
@@ -242,6 +322,8 @@ GameState::~GameState()
 {
 	delete this->player;
 	delete this->pmenu;
+	delete this->omenu;
+
 	//delete texture
 	for (auto& i : this->textures)
 	{
@@ -277,6 +359,37 @@ const bool GameState::running() const
 	return this->window->isOpen() /*&& this->endGame == false*/;
 }
 
+void GameState::spawnObstacle()
+{
+	this->spawnObstacleTime+= this->obs_up;
+	if (this->spawnObstacleTime >= this->spawnObstacleTimeMax)
+	{
+		if (this->obstacles.size() < this->spawnObstacleMaximum)
+		{
+
+			float randomSpawn = static_cast<float>(rand() % this->window->getSize().y) - 300.f;
+			if (randomSpawn < this->window->getSize().y - 300.f && randomSpawn > 0.f)
+			{
+				this->obstacles.push_back(new Obstacle(this->textures["OBSTACLE"],
+					this->window->getSize().x,
+					static_cast<float>(rand() % this->window->getSize().y) - 300.f,
+					this->speedObs, 20.f));
+			}
+			if (this->currentLevel >= 5)
+			{
+				this->speedObs = 20.f;
+				this->obs_up = 1.5f;
+			}
+			else if (this->currentLevel >= 10)
+			{
+				this->speedObs = 30.f;
+				this->obs_up = 10.f;
+				this->spawnObstacleMaximum = 2;
+			}
+		}
+	}
+}
+
 void GameState::spawnEnemy()
 {
 	//Spawning
@@ -287,23 +400,31 @@ void GameState::spawnEnemy()
 	else
 	{
 		float time = cl.getElapsedTime().asMilliseconds();
-			if (this->enemies.size() < this->maxEnemy)
+		float timeBoss = clBoss.getElapsedTime().asMilliseconds();
+			if (this->enemies.size() < this->maxEnemy )
 			{
-				float randomSpawn = static_cast<float>(rand() % this->window->getSize().y) - 100.f;	
-				if (randomSpawn < this->window->getSize().y &&randomSpawn > 0.f)
+			
+				float randomSpawn = static_cast<float>(rand() % this->window->getSize().y) - 250.f;	
+				if (randomSpawn < this->window->getSize().y - 300.f &&randomSpawn > 0.f && this->bossIsDead)
 				{
 					this->enemies.push_back(new Enemy(this->window->getSize().x, randomSpawn, this->randomEnemyType()));
 					this->spawnTimer = 0.f;
-					std::cout << "size of enemies: " << this->enemies.size() << std::endl;
+	
 					if (time >= 10000)
 					{
 						this->currentLevel++;
 						this->maxEnemy += 2.f;
 						this->incrementTime += 0.5f;
+						this->spaceBackground.setTexture(this->spaceBackgroundTexture[0]);
 						cl.restart();
 					}
 				}
-					
+				else if (timeBoss >= 20000 && this->bossIsDead)
+				{
+					this->bossIsDead = false;
+					this->enemies.push_back(new Enemy(this->window->getSize().x, this->window->getSize().y/2.f -100.f, EnemyTypes::BOSS));
+					this->spaceBackground.setTexture(this->spaceBackgroundTexture[1]);
+				}
 			}
 	}
 }
@@ -325,7 +446,7 @@ void GameState::spawnItem()
 	{
 		this->items.push_back(new Item(this->textures["HEAL"],
 			 this->window->getSize().x,
-			static_cast<float>(rand() % this->window->getSize().y)
+			static_cast<float>(rand() % (this->window->getSize().y - 250 ))
 		));
 		this->spawnItemTime = 0.f;
 	}
@@ -370,14 +491,15 @@ void GameState::updatePlayer()
 			1.f, 0.f, 5.f, 10, 0));
 		this->fireSound.play();
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && this->player->canSkill() && !sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && this->player->canSkill() )
 	{
-		this->bullets.push_back(new Bullet(this->textures["GREENBULLET"],
+		this->bullets.push_back(new Bullet(this->textures["BLUEBALL"],
 			this->player->getPosition().x + this->player->getBounds().width / 2.f,
 			this->player->getPosition().y,
-			aimDirNorm.x, aimDirNorm.y, 60.f, 50, 1));
+			aimDirNorm.x, aimDirNorm.y, 50.f, 50, 1));
+		this->s_blueBall.play();
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && this->player->canSkillTornado() && !sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && this->player->canSkillTornado())
 	{
 		if (this->player->getDirTor() == 1)
 		{
@@ -393,20 +515,20 @@ void GameState::updatePlayer()
 				this->player->getPosition().y,
 				1.f, -1.f, 10.f, 100, 2));
 		}
-		
 			this->bullets.push_back(new Bullet(this->textures["TORNADO"],
 				this->player->getPosition().x + this->player->getBounds().width / 2.f,
 				this->player->getPosition().y,
 				1.f, 0.f, 10.f, 100, 2));
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && this->player->canSkillSuper() && !sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && this->player->canSkillSuper())
 	{
 		this->bullets.push_back(new Bullet(this->textures["SUPER"],
 			this->player->getPosition().x + this->player->getBounds().width / 2.f,
 			this->player->getPosition().y,
 			1.f, 0.f, 30.f, 300, 3));
 	}
-
+	if (this->player->getBounds().intersects(this->guiBack.getGlobalBounds()))
+		this->player->setPosition(sf::Vector2f(this->player->getPosition().x,this->window->getSize().y - 200.f - this->player->getBounds().height));
 	this->BulletType();
 	 for (int h =0 ;h< this->ships.size();h++)
 	 {
@@ -450,6 +572,27 @@ void GameState::updateBulltes(sf::RenderWindow &window)
 
 }
 
+void GameState::updateObstacle()
+{
+	unsigned counter = 0;
+	for (auto* obstacle : this->obstacles)
+	{
+		//Edit again
+		obstacle->update();
+		if (obstacle->getBounds().intersects(this->player->getBounds()))
+		{
+			this->obstacles.erase(this->obstacles.begin() + counter);
+			this->player->loseHp(obstacle->getDamage());
+			this->s_obs.play();
+		}
+		else if (obstacle->getBounds().left + obstacle->getBounds().width <= 0.f)
+		{
+			this->obstacles.erase(this->obstacles.begin() + counter);
+		}
+		++counter;
+	}
+}
+
 void GameState::updateItem()
 {
 	unsigned counter = 0;
@@ -461,6 +604,7 @@ void GameState::updateItem()
 		{
 			this->items.erase(this->items.begin() + counter);
 			this->player->gainHealth(20.f);
+			this->s_heal.play();
 		}
 		else if (item->getBounds().left + item->getBounds().width <= 0.f)
 		{
@@ -536,19 +680,7 @@ void GameState::updateCombat()
 		{
 			if (this->bullets[k]->getBound().intersects(this->enemies[i]->getBounds()))
 			{
-				switch (this->enemies[i]->getType())
-				{
-				case EnemyTypes::DEFAULT:
-					this->points += 1;
-					break;
-				case EnemyTypes::MEDIUM:
-					this->points += 10;
-					break;
-				case EnemyTypes::HARD:
-					this->points += 50;
-					break;
-				}
-
+				
 				//Check HP enemy
 				this->enemies[i]->loseHp(this->bullets[k]->getDamage());
 				this->bullets[k]->loseDamage(this->enemies[i]->getHpMax());
@@ -564,6 +696,25 @@ void GameState::updateCombat()
 						this->enemies[i]->getPosition().y - this->enemies[i]->getBounds().height,
 						0
 					));
+					if (enemies[i]->getType() == EnemyTypes::BOSS)
+					{
+						this->bossIsDead = true;
+						this->points += 5000;
+						clBoss.restart();
+					}
+					switch (this->enemies[i]->getType())
+					{
+					case EnemyTypes::DEFAULT:
+						this->points += 10;
+						break;
+					case EnemyTypes::MEDIUM:
+						this->points += 20;
+						break;
+					case EnemyTypes::HARD:
+						this->points += 50;
+						break;
+					}
+					
 					this->enemies.erase(this->enemies.begin() + i);
 					this->enemyDeadSound.play();
 					enemy_delete = true;
@@ -589,7 +740,9 @@ void GameState::updateCombat()
 void GameState::updatePausedMenuButtons()
 {
 	if (this->pmenu->isButtonPressed("QUIT"))
+	{
 		this->endState();
+	}
 }
 
 void GameState::updatePauseInput(const float& dt)
@@ -597,10 +750,13 @@ void GameState::updatePauseInput(const float& dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))) && this->getKeytime())
 	{
 		if (!this->paused)
+		{
 			this->pauseState();
+		}
 		else
+		{
 			this->unpauseState();
-		
+		}
 	}
 }
 
@@ -636,7 +792,7 @@ void GameState::updateGui()
 	this->guiText.setString(ss.str());
 	this->guiText.setPosition(this->window->getSize().x-this->guiText.getGlobalBounds().width,0.f);
 
-	//Update player GUI
+	//Update player hp
 	float hpPercent = static_cast<float>(this->player->getHp()) / this->player->getHpMax();
 	this->playerHpBar.setSize(sf::Vector2f(300.f * hpPercent,this->playerHpBar.getSize().y));
 	
@@ -667,32 +823,32 @@ void GameState::updateGui()
 	this->level.setString(lv.str());
 	this->level.setPosition(this->window->getSize().x - this->level.getGlobalBounds().width, 40.f);
 
-	//Update skill bar
-	this->playerSkillSuper.setPosition(sf::Vector2f(this->player->getPosition().x, this->player->getPosition().y - this->playerSkillSuper.getGlobalBounds().height));
-	this->playerSkillSuperBack.setPosition(sf::Vector2f(this->player->getPosition().x, this->player->getPosition().y - this->playerSkillSuper.getGlobalBounds().height));
-
 }
 
 void GameState::update(const float& dt)
 {
+	this->window->setMouseCursorVisible(true);
 	this->updateMousePosition();
 	this->updateKeytime(dt);
 	this->updatePauseInput(dt);
-		
+	
 	if (this->endGame == false && !this->paused)
 	{
+	
 		this->spawnShip();
 		this->spawnEnemy();
+		this->spawnObstacle();
 		this->spawnItem();
 		this->updateBulltes(*this->window);
 		this->updatePlayer();
 		this->updateItem();
+		this->updateObstacle();
 		this->updateEnemy();
 		this->updateCombat();
 		this->updateBoom();
 		this->updateGui();
 	}
-	if (this->paused);
+	if (this->paused)
 	{
 		this->pmenu->update(this->mousePosView);
 		this->updatePausedMenuButtons();
@@ -712,6 +868,7 @@ void GameState::renderSpace()
 
 void GameState::renderGui(sf::RenderTarget* target)
 {
+	target->draw(this->guiBack);
 	target->draw(this->guiText);
 	target->draw(this->level);
 	target->draw(this->playerHpBarBack);
@@ -729,37 +886,23 @@ void GameState::render(sf::RenderTarget* target)
 	if (!target)
 		target = this->window;
 	
-	//this->block.render(target);
 		//Render background
-	
 		this->renderSpace();
 
 		//Render stuff
 		this->player->render(this->window);
-		sf::Vector2f position = sf::Vector2f(
-			this->window->getSize().x / 2.f, 
-			this->window->getSize().y - this->laserPic.getGlobalBounds().height - this->skillTimeText.getGlobalBounds().height
-		);
-		//Render Pictures
-		this->laserPic.setPosition(position);
-		this->window->draw(this->laserPic);
 
 		//Render gui
 		this->renderGui(this->window);
 
-		//Render pauseMenu
-		if (this->paused)
-		{
-			this->pmenu->render(target);
-		}
+		//BLUE BALL
+		this->window->draw(this->g_frame[0]);
 
-		//Render end text
-		if (this->endGame)
-		{
-				this->omenu->render(this->window);
-				this->textbox1->drawTo(this->window);
-				this->window->draw(e_name);
-		}
+		//SUPER
+		this->window->draw(this->g_frame[1]);
+
+		//TORNADO
+		this->window->draw(this->g_frame[2]);
 
 		for (auto* bullet : this->bullets)
 		{
@@ -773,12 +916,15 @@ void GameState::render(sf::RenderTarget* target)
 
 		for (auto* enemy : this->enemies)
 		{
-			this->enemyText.setPosition(enemy->getPosition().x + this->enemyText.getGlobalBounds().width,
-				enemy->getPosition().y - this->enemyText.getGlobalBounds().height);
-
-			this->enemyText.setString(std::to_string(enemy->getHp()) + "/" + std::to_string(enemy->getHpMax()));
+			this->enemyHpBar.setPosition(enemy->getPosition().x +this->enemyHpBar.getGlobalBounds().width -20.f,
+				enemy->getPosition().y );
+			this->enemyHpBarBack.setPosition(enemy->getPosition().x + this->enemyHpBar.getGlobalBounds().width - 20.f,
+				enemy->getPosition().y);
+			float enemyPer = static_cast<float>(50 *enemy->getHp()) / enemy->getHpMax();
+			this->enemyHpBar.setSize(sf::Vector2f(enemyPer,this->enemyHpBar.getSize().y ));
 			enemy->render(this->window);
-			this->window->draw(this->enemyText);
+			this->window->draw(this->enemyHpBar);
+			this->window->draw(this->enemyHpBarBack);
 		}
 
 		for (auto* boom : this->booms)
@@ -789,5 +935,24 @@ void GameState::render(sf::RenderTarget* target)
 		for (auto* ship : this->ships)
 		{
 			ship->render(this->window);
+		}
+
+		for (auto* obstacle : this->obstacles)
+		{
+			obstacle->render(this->window);
+		}
+
+		//Render end text
+		if (this->endGame)
+		{
+			this->omenu->render(this->window);
+			this->textbox1->drawTo(this->window);
+			this->window->draw(e_name);
+		}
+
+		//Render pauseMenu
+		if (this->paused)
+		{
+			this->pmenu->render(target);
 		}
 }

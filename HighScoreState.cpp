@@ -24,17 +24,25 @@ void HighScoreState::initKeybinds()
 HighScoreState::HighScoreState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	: State(window, supportedKeys, states)
 {
+	if (!this->CursorText.loadFromFile("img/mouse.png"))
+	{
+		std::cout << "Can't load this mouse texture" << "\n";
+	}
+	this->mouseCursor.setTexture(this->CursorText);
+	this->mouseCursor.setScale(0.1f, 0.1f);
+
 	this->initFonts();
 	this->initButtons();
 
-	this->texture.loadFromFile("img/HighScoreBackground.jpg");
+	this->texture.loadFromFile("img/spaceScore.jpg");
 
 	this->wallPaper.setSize(Vector2f(window->getSize()));
 	this->wallPaper.setTexture(&this->texture);
+	this->wallPaper.setFillColor(sf::Color(0,255,255,250));
 	
-	this->background1.setPosition({700,100});
-	this->background1.setSize({ 500,500 });
-	this->background1.setOutlineThickness(10);
+	this->background1.setPosition({0,70});
+	this->background1.setSize({ 1920, 500 });
+	this->background1.setOutlineThickness(3);
 	this->background1.setOutlineColor(Color(10,255,170,200));
 	this->background1.setFillColor(Color(20, 20, 20, 250));
 
@@ -107,6 +115,8 @@ void HighScoreState::updateInput(const float& dt)
 
 void HighScoreState::update(const float& dt)
 {
+	this->window->setMouseCursorVisible(false);
+	this->mouseCursor.setPosition(mousePosView);
 	this->updateMousePosition();
 	this->updateKeytime(dt);
 	this->updateButtons();
@@ -126,6 +136,7 @@ void HighScoreState::render(RenderTarget* target)
 	{
 		target = this->window;
 	}
+	
 	target->draw(this->wallPaper);
 	target->draw(this->background2);
 	target->draw(this->background1);
@@ -138,4 +149,5 @@ void HighScoreState::render(RenderTarget* target)
 	}
 
 	this->renderButton(target);
+	target->draw(this->mouseCursor);
 }

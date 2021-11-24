@@ -1,9 +1,21 @@
 #include "Button.h"
 
-Button::Button(float x, float y, float width, float height, 
+void Button::initSound()
+{
+	if (!this->soundBuf["BUTTON_SOUND"].loadFromFile("sound/buttonSound.wav"))
+	{
+		std::cout << "CANT LOAD BUTTON SOUND"<< "\n";
+	}
+	
+	this->buttonSound.setBuffer(this->soundBuf["BUTTON_SOUND"]);
+}
+
+Button::Button(float x, float y, float width, float height,
 	sf::Font* font, std::string text,
 	sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
 {
+	this->initSound();
+
 	this->buttonState = BTN_IDLE;
 	this->texture.loadFromFile("img/obsidience.png");
 	this->shape.setSize(sf::Vector2f(width, height));
@@ -51,12 +63,20 @@ void Button::update(const sf::Vector2f& mousePos)
 
 	//Idle
 	this->buttonState = BTN_IDLE;
-	
+	float time = cl.getElapsedTime().asMilliseconds();
 	//Hover
 	if (this->shape.getGlobalBounds().contains(mousePos))
 	{
 		this->buttonState = BTN_HOVER;
 		this->shape.setScale(1.1f, 1.1f);
+
+		//Hover sound
+		this->buttonSound.play();
+		if (time > 30)
+		{
+			this->buttonSound.stop();
+		}
+
 		//Pressed
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
@@ -65,9 +85,9 @@ void Button::update(const sf::Vector2f& mousePos)
 	}
 	else {
 		this->shape.setScale(1.0f, 1.0f);
+		cl.restart();
 	}
 	
-
 	switch (this->buttonState)
 	{
 	case BTN_IDLE:

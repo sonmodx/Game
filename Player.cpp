@@ -3,7 +3,7 @@
 void Player::initVariables()
 {
 	this->movementSpeed = 30.f;
-	this->hpMax = 100;
+	this->hpMax = 100.f;
 	this->hp = this->hpMax;
 	this->attackTimeMax = 20.f;
 	this->attackTime = this->attackTimeMax;
@@ -15,6 +15,8 @@ void Player::initVariables()
 	this->skillSuper = this->skillSuperMax;
 	this->directionTor = -1;
 	this->animationFrame = 0;
+	this->receive_damage = 0;
+	this->c = 0.f;
 }
 
 void Player::initShape()
@@ -151,9 +153,11 @@ void Player::setHp(const int hp)
 
 void Player::loseHp(const int value)
 {
-	this->hp -= value;
+	c = 0.f;
+	this->receive_damage = value;
 	if (this->hp < 0.f)
 		this->hp = 0;
+	
 }
 
 void Player::setPosition(const sf::Vector2f position)
@@ -196,6 +200,15 @@ void Player::updateAttack()
 {
 	if (this->attackTime < this->attackTimeMax)
 		this->attackTime++;
+}
+
+void Player::updateLoseHp()
+{
+	if (c <  this->receive_damage)
+	{
+		this->hp -= 1.f;
+		c += 1.f;
+	}
 }
 
 void Player::updateInput()
@@ -262,6 +275,7 @@ void Player::updateWindowBoundsCollision(const sf::RenderTarget* target)
 void Player::update(const sf::RenderTarget* target)
 {
 	this->updateAttack();
+	this->updateLoseHp();
 	this->updateSkill();
 	this->updateInput();
 	

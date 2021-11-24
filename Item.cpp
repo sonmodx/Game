@@ -11,7 +11,7 @@ Item::Item(sf::Texture* texture, float pos_x, float pos_y) //type
 	this->initVariable();
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x,pos_y);
-	this->sprite.setScale(0.5f, 0.5f);
+	this->sprite.setScale(0.35f, 0.35f);
 }
 
 Item::~Item()

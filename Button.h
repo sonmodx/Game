@@ -15,6 +15,12 @@ private:
 	sf::Color idleColor;
 	sf::Color hoverColor;
 	sf::Color activeColor;
+
+	sf::Sound buttonSound;
+	std::map<std::string, sf::SoundBuffer> soundBuf;
+	sf::Clock cl;
+
+	void initSound();
 public:
 	Button(float x, float y, float width, float height,
 		sf::Font* font, std::string text,

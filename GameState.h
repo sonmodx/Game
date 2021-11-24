@@ -18,11 +18,14 @@
 #include "ScoreBoard.h"
 #include "GameOverMenu.h"
 #include "Textbox.h"
+#include "Obstacle.h"
 
 class GameState
 	: public State
 {
 private:
+	bool s_check;
+
 	FILE* fp;
 	char temp[255];
 	unsigned int score[6];
@@ -48,18 +51,34 @@ private:
 	sf::Vector2f aimDir;
 	sf::Vector2f aimDirNorm;
 	sf::Vector2f playerCenter;
-	
+
+	//Obstacle
+	std::vector<Obstacle*> obstacles;
+	float spawnObstacleTime;
+	float spawnObstacleTimeMax;
+	unsigned spawnObstacleMaximum;
+	float speedObs;
+	float obs_up;
+
 	//System
 	int points;
 	int currentLevel;
 	float incrementTime;
 	sf::Clock cl;
+	sf::Clock clBoss;
+	sf::Clock cl_s;
 
-	//Music
+	//Sound audio
 	std::map<std::string, sf::SoundBuffer> buffers;
 	sf::Sound endGameSounds;
 	sf::Sound enemyDeadSound;
 	sf::Sound fireSound;
+	sf::Sound s_blueBall;
+	sf::Sound s_heal;
+	sf::Sound s_obs;
+
+	//Soundtrack
+	sf::Music music;
 		
 	//Ship
 	float numberShipMax;
@@ -83,10 +102,12 @@ private:
 	sf::RectangleShape playerSkillSuperBack;
 
 	//Enemies
+	bool bossIsDead;
 	float spawnTimer;
 	float spawnTimerMax;
 	float maxEnemy;
-	sf::Text enemyText;
+	sf::RectangleShape enemyHpBar;
+	sf::RectangleShape enemyHpBarBack;
 	std::vector<Enemy*> enemies;
 
 	//Item
@@ -99,7 +120,7 @@ private:
 	std::vector<sf::Sprite*> bloods;
 
 	//Pictures
-	sf::Sprite laserPic;
+	sf::RectangleShape g_frame[3];
 	
 	//GUI
 	sf::Font guiFont;
@@ -107,10 +128,11 @@ private:
 	sf::Text endGameText;
 	sf::Text skillTimeText;
 	sf::Text level;
+	sf::RectangleShape guiBack;
 
 	//Background
 	sf::Sprite spaceBackground;
-	sf::Texture spaceBackgroundTexture;
+	sf::Texture spaceBackgroundTexture[3];
 
 	void initKeybinds();
 	void initVariables();
@@ -119,6 +141,7 @@ private:
 	void initGameOverMenu();
 	void initTexture();
 	void initSpace();
+	void initObstacle();
 	void initShip();
 	void initPlayer();
 	void initFonts();
@@ -141,6 +164,7 @@ public:
 	//Functions
 	const bool running() const;
 
+	void spawnObstacle();
 	void spawnEnemy();
 	void spawnShip();
 	void spawnItem();
@@ -150,6 +174,7 @@ public:
 	void updatePlayer();
 	void updateBulltes(sf::RenderWindow &window);
 
+	void updateObstacle();
 	void updateItem();
 	void updateEnemy();
 	void updateBoom();

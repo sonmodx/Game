@@ -9,6 +9,10 @@
 class HighScoreState : public State
 {
 private:
+	sf::Sprite mouseCursor;
+	sf::Texture CursorText;
+
+
 	RectangleShape wallPaper;
 	ConvexShape background2;
 	RectangleShape background1;

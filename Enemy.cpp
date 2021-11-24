@@ -28,6 +28,14 @@ void Enemy::initVaraible()
 		this->speed = 7.f;
 		this->animationFrameHARD = 9;
 		break;
+	case BOSS:
+		this->hp = 500;
+		this->hpMax = 500;
+		this->damage = 100;
+		this->point = 5000;
+		this->speed = 9.f;
+		this->animationFrame = 9;
+		break;
 	}
 }
 	
@@ -57,6 +65,14 @@ void Enemy::initShape()
 		this->sizeSprite = sf::Vector2f(this->texture.getSize().x / 12, this->texture.getSize().y / 8);
 		this->sprite.setTextureRect(sf::IntRect(0, 0, this->sizeSprite.x, this->sizeSprite.y));
 		this->sprite.setScale(2.f, 2.f);
+		break;
+	case BOSS:
+		//set Texture 
+		this->texture.loadFromFile("img/AllEnemy.png");
+		this->sprite.setTexture(this->texture);
+		this->sizeSprite = sf::Vector2f(this->texture.getSize().x / 12, this->texture.getSize().y / 8);
+		this->sprite.setTextureRect(sf::IntRect(0, 0, this->sizeSprite.x, this->sizeSprite.y));
+		this->sprite.setScale(2.5f, 2.5f);
 		break;
 	}
 		
@@ -161,6 +177,19 @@ void Enemy::Move()
 			if (this->animationFrameHARD > 11)
 			{
 				this->animationFrameHARD = 9;
+			}
+			cl.restart();
+		}
+		break;
+	case BOSS:
+		if (time > 100)
+		{
+			this->sprite.move(-this->speed, 0.f);
+			this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * animationFrame, this->sizeSprite.y * 5, this->sizeSprite.x, this->sizeSprite.y));
+			this->animationFrame++;
+			if (this->animationFrame > 11)
+			{
+				this->animationFrame = 9;
 			}
 			cl.restart();
 		}

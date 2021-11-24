@@ -9,10 +9,11 @@ private:
 	sf::Sprite sprite;
 	sf::Vector2i sizeSprite;
 	sf::Clock cl;
-	
+	float c;
 	float movementSpeed;
-	int hp;
-	int hpMax;
+	float hp;
+	float hpMax;
+	unsigned receive_damage;
 	float attackTime;
 	float attackTimeMax;
 	float skillTime;
@@ -59,6 +60,7 @@ public:
 	//Functions
 	void updateSkill();
 	void updateAttack();
+	void updateLoseHp();
 	void updateInput();
 	void updateWindowBoundsCollision(const sf::RenderTarget* target);
 	void update(const sf::RenderTarget* target);

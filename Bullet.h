@@ -36,6 +36,7 @@ public:
 	const sf::Vector2f getPositon() const;
 	const int& getDamage() const;
 	const int getType() const;
+	const int getAniFrame_y() const;
 
 	//Modifer
 	void loseDamage(const int value);

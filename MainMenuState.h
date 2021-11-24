@@ -7,9 +7,12 @@
 class MainMenuState :
     public State
 {
-private:
-    Textbox *nameMenu;
+private:    
+    sf::Sprite mouseCursor;
+    sf::Texture CursorText;
 
+    Textbox *nameMenu;
+    bool checkInGame;
 
     sf::Texture backgroundTexture;
     sf::RectangleShape background;
@@ -30,6 +33,7 @@ private:
 
     //Function
     void initVariable();
+    void initSound();
     void initBackground();
     void initFonts();
     void initKeybinds();

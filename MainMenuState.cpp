@@ -6,6 +6,11 @@ void MainMenuState::initVariable()
 	this->isPlay = 0;
 }
 
+void MainMenuState::initSound()
+{
+	
+}
+
 void MainMenuState::initBackground()
 {
 	this->background.setSize(sf::Vector2f(
@@ -58,6 +63,15 @@ void MainMenuState::initPlayButton()
 MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	:State(window, supportedKeys, states)
 {
+	
+	if (!this->CursorText.loadFromFile("img/mouse.png"))
+	{
+		std::cout<<"Can't load this mouse texture"<< "\n";
+	}
+	this->mouseCursor.setTexture(this->CursorText);
+	this->mouseCursor.setScale(0.1f, 0.1f);
+	//this->mouseCursor.setOrigin(sf::Vector2f(this->CursorText.getSize().x /2.f , this->CursorText.getSize().y /2.f));
+
 	this->initVariable();
 	this->initBackground();
 	this->initFonts();
@@ -91,6 +105,7 @@ void MainMenuState::updateButtons()
 	if (this->buttons["GAME_STATE"]->isPressed())
 	{
 		this->states->push(new GameState(this->window, this->supportedKeys, this->states));
+		this->checkInGame = true;
 	}
 	
 	//High Score
@@ -102,7 +117,7 @@ void MainMenuState::updateButtons()
 	//Quit the game
 	if (this->buttons["EXIT_STATE"]->isPressed())
 	{
-		this->endState();
+			this->endState();
 	}
 }
 
@@ -112,10 +127,12 @@ void MainMenuState::updateEvent(sf::Event input)
 
 void MainMenuState::update(const float& dt)
 {
-	
-		this->updateMousePosition();
-		this->updateInput(dt);
+	this->window->setMouseCursorVisible(false);
+	this->mouseCursor.setPosition(mousePosView);
 
+	this->updateMousePosition();
+	this->updateInput(dt);
+	
 		this->updateButtons();
 }
 
@@ -135,6 +152,8 @@ void MainMenuState::render(sf::RenderTarget* target)
 	target->draw(this->background);
 
 	this->renderButtons(target);
+
+	target->draw(this->mouseCursor);
 	/*
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 50);

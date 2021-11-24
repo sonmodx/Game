@@ -83,6 +83,11 @@ const int Bullet::getType() const
 	return this->type;
 }
 
+const int Bullet::getAniFrame_y() const
+{
+	return this->animationFrame_y;
+}
+
 void Bullet::loseDamage(const int value)
 {
 	this->damage -= value;
@@ -101,7 +106,7 @@ void Bullet::Move()
 		break;
 	case LASER:
 		this->sprite.move(this->movementSpeed * this->direction);
-		if (time > 15)
+		if (time > 10)
 		{
 			this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * animationFrame_x, this->sizeSprite.y * animationFrame_y, this->sizeSprite.x, this->sizeSprite.y));
 			this->animationFrame_x++;
@@ -136,11 +141,13 @@ void Bullet::Move()
 			this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * animationFrame_x, this->sizeSprite.y * animationFrame_y, this->sizeSprite.x, this->sizeSprite.y));
 			if (this->animationFrame_x > 5 && this->animationFrame_y < 2 )
 			{
+				
 				this->animationFrame_y++;
 				this->animationFrame_x = 0;
 			}
 			else if (this->animationFrame_y >= 2 )
 			{
+				
 				this->animationFrame_y = 2;
 				this->animationFrame_x++;
 				this->sprite.move(this->movementSpeed * this->direction);
@@ -152,6 +159,7 @@ void Bullet::Move()
 				this->count++;
 				if (this->count > 10 &&this->charged < 4)
 				{
+					
 					this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * animationFrame_x, this->sizeSprite.y * animationFrame_y, this->sizeSprite.x, this->sizeSprite.y));
 					this->animationFrame_x--;
 					this->sprite.setTextureRect(sf::IntRect(this->sizeSprite.x * animationFrame_x, this->sizeSprite.y * animationFrame_y, this->sizeSprite.x, this->sizeSprite.y));
@@ -170,7 +178,6 @@ void Bullet::Move()
 
 void Bullet::update(int type)
 {
-	
 	this->Move();
 }
 
